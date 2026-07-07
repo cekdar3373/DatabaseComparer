@@ -1,0 +1,125 @@
+﻿@model DatabaseComparer.Models.ConnectionModel
+
+<div class="container mt-4">
+    <h2 class="mb-4">Veritabanı Bağlantı Ayarları</h2>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var hata in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p class="mb-0">@hata.ErrorMessage</p>
+            }
+        </div>
+    }
+
+    <form asp-action="Karsilastir" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">Kaynak Veritabanı (Source)</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Sunucu Adı</label>
+                            <input type="text" class="form-control" name="SourceServer" value="@Model.SourceServer" placeholder="(localdb)\MSSQLLocalDB" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kimlik Doğrulama Tipi</label>
+                            <select class="form-select" name="SourceAuthType">
+                                <option value="Windows" selected="@(Model.SourceAuthType == "Windows")">Windows Authentication</option>
+                                <option value="SQL" selected="@(Model.SourceAuthType == "SQL")">SQL Server Authentication</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kullanıcı Adı</label>
+                            <input type="text" class="form-control" name="SourceUsername" value="@Model.SourceUsername" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Şifre</label>
+                            <input type="password" class="form-control" name="SourcePassword" value="@Model.SourcePassword" />
+                        </div>
+
+                        <button type="submit" name="taraf" value="source" formaction="@Url.Action("TestEt")" formmethod="post" class="btn btn-outline-primary">
+                            Bağlantıyı Test Et
+                        </button>
+
+                        @if (TempData["sourceMesaj"] != null)
+                        {
+                            var basarili = (bool)TempData["sourceBasarili"]!;
+                            <div class="alert @(basarili ? "alert-success" : "alert-danger") mt-2">
+                                @TempData["sourceMesaj"]
+                            </div>
+                        }
+
+                        @if (Model.SourceDatabaseList.Any())
+                        {
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Veritabanı Seç</label>
+                                <select class="form-select" name="SourceDatabase">
+                                    @foreach (var db in Model.SourceDatabaseList)
+                                    {
+                                        <option value="@db" selected="@(db == Model.SourceDatabase)">@db</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-secondary text-white">Hedef Veritabanı (Destination)</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Sunucu Adı</label>
+                            <input type="text" class="form-control" name="DestinationServer" value="@Model.DestinationServer" placeholder="(localdb)\MSSQLLocalDB" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kimlik Doğrulama Tipi</label>
+                            <select class="form-select" name="DestinationAuthType">
+                                <option value="Windows" selected="@(Model.DestinationAuthType == "Windows")">Windows Authentication</option>
+                                <option value="SQL" selected="@(Model.DestinationAuthType == "SQL")">SQL Server Authentication</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kullanıcı Adı</label>
+                            <input type="text" class="form-control" name="DestinationUsername" value="@Model.DestinationUsername" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Şifre</label>
+                            <input type="password" class="form-control" name="DestinationPassword" value="@Model.DestinationPassword" />
+                        </div>
+
+                        <button type="submit" name="taraf" value="destination" formaction="@Url.Action("TestEt")" formmethod="post" class="btn btn-outline-secondary">
+                            Bağlantıyı Test Et
+                        </button>
+
+                        @if (TempData["destinationMesaj"] != null)
+                        {
+                            var basarili = (bool)TempData["destinationBasarili"]!;
+                            <div class="alert @(basarili ? "alert-success" : "alert-danger") mt-2">
+                                @TempData["destinationMesaj"]
+                            </div>
+                        }
+
+                        @if (Model.DestinationDatabaseList.Any())
+                        {
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Veritabanı Seç</label>
+                                <select class="form-select" name="DestinationDatabase">
+                                    @foreach (var db in Model.DestinationDatabaseList)
+                                    {
+                                        <option value="@db" selected="@(db == Model.DestinationDatabase)">@db</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg mt-3">Karşılaştır</button>
+    </form>
+</div>

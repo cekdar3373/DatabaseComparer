@@ -1,0 +1,93 @@
+﻿@model DatabaseComparer.Models.KarsilastirmaSonucu
+
+<div class="container mt-4">
+    <h2 class="mb-4">Karşılaştırma Sonucu</h2>
+    <p class="text-muted">
+        Kaynak: <strong>@ViewBag.KaynakDb</strong> &nbsp;→&nbsp; Hedef: <strong>@ViewBag.HedefDb</strong>
+    </p>
+
+    @if (Model.ToplamFarkliliklar == 0)
+    {
+        <div class="alert alert-success">
+            İki veritabanı arasında herhangi bir şema farklılığı bulunmamaktadır. Veritabanları birebir aynıdır.
+        </div>
+    }
+    else
+    {
+        <!-- Dashboard Kartları -->
+        <div class="row text-center mb-4">
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamTablo</h5>
+                    <small class="text-muted">Toplam Tablo</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamKolon</h5>
+                    <small class="text-muted">Toplam Kolon</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamProsedur</h5>
+                    <small class="text-muted">Stored Procedure</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamView</h5>
+                    <small class="text-muted">View</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamFonksiyon</h5>
+                    <small class="text-muted">Function</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamIndex</h5>
+                    <small class="text-muted">Index</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3">
+                    <h5>@Model.ToplamForeignKey</h5>
+                    <small class="text-muted">Foreign Key</small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card p-3 bg-warning">
+                    <h5>@Model.ToplamFarkliliklar</h5>
+                    <small>Toplam Farklılık</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kategori Bazlı Fark Listesi -->
+        @foreach (var kategori in Model.Farklar.GroupBy(f => f.Kategori))
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    <strong>@kategori.Key</strong> Farkları (@kategori.Count())
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var fark in kategori)
+                    {
+                        var renk = fark.Durum switch
+                        {
+                            "SadeceKaynakta" => "text-primary",
+                            "SadeceHedefte" => "text-secondary",
+                            _ => "text-danger"
+                        };
+                        <li class="list-group-item @renk">@fark.Aciklama</li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+
+    <a asp-action="Baglanti" class="btn btn-secondary mt-3">Bağlantı Ekranına Dön</a>
+</div>
