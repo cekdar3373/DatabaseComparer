@@ -1,0 +1,105 @@
+# Test Senaryoları – Database Comparer
+
+Bu doküman, Northwind_A (kaynak) ve Northwind_B (hedef) veritabanları arasında bilinçli olarak oluşturulan farklılıkları ve uygulamanın bu farkları doğru şekilde tespit edip etmediğini listeler.
+
+## Test Ortamı
+- **Kaynak Veritabanı:** Northwind_A
+- **Hedef Veritabanı:** Northwind_B
+- **Sunucu:** (localdb)\MSSQLLocalDB
+
+---
+
+## TS-01: Bağlantı – Geçerli Sunucu ile Test
+| Adım | Açıklama |
+|---|---|
+| Ön koşul | Uygulama açık, Bağlantı ekranındayız |
+| İşlem | Sunucu adı olarak `(localdb)\MSSQLLocalDB` girilir, "Bağlantıyı Test Et" tıklanır |
+| Beklenen Sonuç | "Bağlantı başarılı!" mesajı görünür, veritabanı listesi dropdown'da gelir |
+| Durum | ✅ Başarılı |
+
+## TS-02: Bağlantı – Geçersiz Sunucu ile Test
+| Adım | Açıklama |
+|---|---|
+| İşlem | Sunucu adı olarak `GecersizSunucu123` girilir, "Bağlantıyı Test Et" tıklanır |
+| Beklenen Sonuç | "Bağlantı başarısız" mesajı kırmızı renkte gösterilir |
+| Durum | ✅ Başarılı |
+
+## TS-03: Aynı Veritabanı Seçimi Uyarısı (FR-16)
+| Adım | Açıklama |
+|---|---|
+| İşlem | Kaynak ve hedef olarak aynı sunucu + aynı veritabanı (örn. Northwind_A / Northwind_A) seçilir, "Karşılaştır" tıklanır |
+| Beklenen Sonuç | "Kaynak ve hedef olarak aynı veritabanı seçilemez" uyarısı gösterilir, karşılaştırma başlamaz |
+| Durum | ✅ Başarılı |
+
+## TS-04: Fark Bulunmaması Durumu (FR-17)
+| Adım | Açıklama |
+|---|---|
+| İşlem | Northwind_A hem kaynak hem farklı bir isimle aynı içerikte bir kopya (örn. orijinal Northwind) hedef olarak seçilir |
+| Beklenen Sonuç | "İki veritabanı arasında herhangi bir şema farklılığı bulunmamaktadır..." mesajı gösterilir |
+| Durum | ⏳ Test edilecek |
+
+## TS-05: Eksik Tablo Tespiti (FR-08)
+| Adım | Açıklama |
+|---|---|
+| İşlem | Northwind_A → Northwind_B karşılaştırılır |
+| Beklenen Sonuç | "CustomerCustomerDemo" tablosunun sadece kaynakta olduğu raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-06: Kolon Farkı Tespiti (FR-09)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Customers.LoyaltyPoints" kolonunun sadece hedefte olduğu raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-07: Veri Tipi Farkı Tespiti
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Products.QuantityPerUnit" veri tipinin nvarchar(20) / nvarchar(50) olarak farklı olduğu raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-08: Nullable Farkı Tespiti
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Employees.Region" kolonunun NULL/NOT NULL farkı raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-09: Primary Key Farkı Tespiti (FR-13)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Shippers" tablosunun primary key'inin sadece kaynakta olduğu raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-10: Foreign Key Farkı Tespiti (FR-14)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Orders.FK_Orders_Shippers" foreign key'inin sadece kaynakta olduğu raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-11: Index Farkı Tespiti (FR-15)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Categories.CategoryName" index'i sadece kaynakta, "Products.IX_Products_UnitPrice" index'i sadece hedefte raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-12: View Farkı Tespiti (FR-10)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Current Product List" view'ının sadece kaynakta olduğu raporlanır |
+| Durum | ✅ Başarılı |
+
+## TS-13: Stored Procedure İçerik Farkı Tespiti (FR-11)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | "Ten Most Expensive Products" prosedürünün gövdesinin farklı olduğu raporlanır (ROWCOUNT 10 vs 5) |
+| Durum | ✅ Başarılı |
+
+## TS-14: Dashboard Özet Doğruluğu (FR-19 → FR-26)
+| Adım | Açıklama |
+|---|---|
+| Beklenen Sonuç | Toplam tablo, kolon, SP, view, function, index, FK ve toplam farklılık sayıları doğru gösterilir |
+| Durum | ✅ Başarılı (13 tablo, 190 kolon, 7 SP, 16 view, 0 function, 26 index, 13 FK, 16 fark) |
+
+---
+
+## Özet
+14 test senaryosundan **13'ü başarıyla doğrulandı**, 1 tanesi (TS-04, fark bulunmama durumu) ek test gerektiriyor.
