@@ -13,3 +13,21 @@ Bu klasördeki SQL script'leri, Northwind_A (referans/değişmemiş) ve Northwin
 | 07_index_diff.sql | Index | Categories.CategoryName index'i silindi, Products.IX_Products_UnitPrice index'i eklendi |
 | 08_view_diff.sql | View | "Current Product List" view'ı silindi |
 | 09_procedure_diff.sql | Stored Procedure | "Ten Most Expensive Products" prosedürünün gövdesi değiştirildi (ROWCOUNT 10 → 5) |
+## Ekran Görüntüleri
+
+### Bağlantı Ekranı
+![Bağlantı Ekranı](screenshots/01-baglanti-ekrani.png)
+
+### Bağlantı Testi Başarılı
+![Kaynak Bağlantı Testi](screenshots/02-baglanti-kaynak-test.png)
+![Hedef Bağlantı Testi](screenshots/03-baglanti-hedef-test.png)
+
+### Karşılaştırma Sonucu – Dashboard Özeti
+![Dashboard Özet](screenshots/04-dashboard-ozet.png)
+
+### Kategori Bazlı Fark Listesi
+![Fark Listesi 1](screenshots/05-kategori-fark-listesi-1.png)
+![Fark Listesi 2](screenshots/06-kategori-fark-listesi-2.png)
+
+### Fark Bulunmama Durumu
+![Fark Yok Mesajı](screenshots/07-fark-yok-mesaji.png)
