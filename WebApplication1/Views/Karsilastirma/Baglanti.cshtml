@@ -123,3 +123,26 @@
         <button type="submit" class="btn btn-success btn-lg mt-3">Karşılaştır</button>
     </form>
 </div>
+<script>
+    function authAlanlariniGuncelle(prefix) {
+        const authSelect = document.querySelector(`select[name="${prefix}AuthType"]`);
+        const usernameInput = document.querySelector(`input[name="${prefix}Username"]`);
+        const passwordInput = document.querySelector(`input[name="${prefix}Password"]`);
+
+        function guncelle() {
+            const sqlSecili = authSelect.value === "SQL";
+            usernameInput.disabled = !sqlSecili;
+            passwordInput.disabled = !sqlSecili;
+            if (!sqlSecili) {
+                usernameInput.value = "";
+                passwordInput.value = "";
+            }
+        }
+
+        authSelect.addEventListener("change", guncelle);
+        guncelle(); // Sayfa yüklendiğinde de mevcut duruma göre ayarla
+    }
+
+    authAlanlariniGuncelle("Source");
+    authAlanlariniGuncelle("Destination");
+</script>
