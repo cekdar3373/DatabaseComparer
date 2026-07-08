@@ -1,0 +1,5 @@
+USE Northwind_B
+GO
+
+ALTER TABLE Shippers DROP CONSTRAINT PK_Shippers
+GO
