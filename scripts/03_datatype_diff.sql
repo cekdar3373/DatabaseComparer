@@ -1,0 +1,5 @@
+USE Northwind_B
+GO
+
+ALTER TABLE Products ALTER COLUMN QuantityPerUnit NVARCHAR(50)
+GO
